@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../model/User'); 
+const bcrypt = require('bcrypt');
+
 require("dotenv").config();
 const SECRET = process.env.SECRET || "SE3R5TK52";
 // api for login a user
@@ -9,13 +11,20 @@ const Signin = async(req,res) => {
         console.log(req.body);
         console.log(username , " " , password);
         const findUser = await User.findOne({username , password});
+        const matchpassowrd = bcrypt.compare(password , findUser.password  , function(err,res) {
+            if(err){
+                res.status(500).json({
+                    message: "Logged in Failed (Passowrd didn't matched)",
+                    success: false
+                })
+            }
+        });
         if(findUser){
             const role = findUser.role;
             const payload = {
                 username , password , role
             }
             const token = jwt.sign(payload , SECRET);
-            console.log("Token is : ", token);
             res.status(200).json({
                 message: "User Logged in Successfully",
                 success: true,
@@ -41,9 +50,8 @@ const Signin = async(req,res) => {
 const Signup = async(req,res) => {
     try{
         const {username , password, name , role} = req.body;
-        console.log(req.body);
-        console.log(username , " "  , password , " " , name , " " , role );
-        const putUsertoDB = await User.create({username , password , name , role});
+        const hashedPassword = await bcrypt.hash(String(password) , 10);        // bcrypt.hash(password , salt);
+        const putUsertoDB = await User.create({username , password:hashedPassword , name , role});
         if(putUsertoDB){
             return res.status(200).json({
                 message: "User Created Successfully",
