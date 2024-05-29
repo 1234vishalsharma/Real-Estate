@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Link , useNavigate} from 'react-router-dom';
 import {Button} from '@mui/material';
 import {ToastContainer , toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useDispatch, useSelector} from 'react-redux';
+import { signInSuccess , signInFailure , signInStart } from '../store/reducers/userSlice';
 
 export default function Signin() {
+
   const router = useNavigate();
   const [username , setUsername] = useState("");
-  const [password , setPassword] = useState("");  
+  const [password , setPassword] = useState(""); 
+  const dispatch = useDispatch();  
+  const {error} = useSelector((state) => state.user);
+  useEffect(()=>{
+    toast(error);
+  },[error])
   const notify = (text) => {
     toast(text , {
       theme: "dark",
@@ -16,6 +24,7 @@ export default function Signin() {
   }
   const handelLogin = (e) => {
     e.preventDefault();
+    dispatch(signInStart());
     if(!username || !password){
       notify("empty fields are not allowed");
       return;
@@ -35,10 +44,14 @@ export default function Signin() {
     }).then((data) => {
       console.log(data);
       if(data.success){
+        dispatch(signInSuccess(data.token_id))
         router('/')
         localStorage.setItem('token' , data.token_id);
+      }else{
+        dispatch(signInFailure("Faild to login"));
       }
         }).catch((e) => {
+          dispatch(signInFailure(e.message));
       console.log("Error occured");
     })
   }

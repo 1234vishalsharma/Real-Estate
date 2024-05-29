@@ -13,20 +13,28 @@ const Login = async(req,res) => {
         if(FindUser){
             const hashPass = await bcrypt.compare(password , FindUser.password);
                 if(hashPass){
-                    const token = jwt.sign({username , password} , process.env.SECRET);
+                    const age = 1000 * 60 * 60 *24 * 7;
+                    const token = jwt.sign({username , password} , process.env.SECRET , {expiresIn : age});
                     
-                    return res.cookie("token_id" , token , {
-                        maxAge: 1000 * 60 * 60 *24 * 7,
-                     }).status(200).json({
-                        message: "User Login Successfully",
-                        success: true
-                    })
-                    
-                    // return res.status(200).json({
+                    // return res.cookie("token_id" , token , {
+                    //     maxAge: age,
+                    //  }).status(200).json({
                     //     message: "User Login Successfully",
                     //     success: true,
                     //     token_id: token
                     // })
+
+                    // return res.cookie('access_token',token , {httpOnly: true}).json({
+                    //     message: "User Login Successfully",
+                    //     success: true,
+                    //     token_id: token
+                    // });
+                    
+                    return res.status(200).json({
+                        message: "User Login Successfully",
+                        success: true,
+                        token_id: token
+                    })
                 }
             return res.status(401).json({
                 message: "token not created (password unmatched)",
