@@ -5,6 +5,7 @@ import {ToastContainer , toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {useDispatch, useSelector} from 'react-redux';
 import { signInSuccess , signInFailure , signInStart } from '../store/reducers/userSlice';
+import OAuth from '../components/OAuth';
 
 export default function Signin() {
 
@@ -14,7 +15,7 @@ export default function Signin() {
   const dispatch = useDispatch();  
   const {error} = useSelector((state) => state.user);
   useEffect(()=>{
-    toast(error);
+    notify(error);
   },[error])
   const notify = (text) => {
     toast(text , {
@@ -52,7 +53,7 @@ export default function Signin() {
       }
         }).catch((e) => {
           dispatch(signInFailure(e.message));
-      console.log("Error occured");
+          console.log("Error occured");
     })
   }
 
@@ -69,6 +70,7 @@ export default function Signin() {
         <input onChange={e=>setPassword(e.target.value)} type="text" className="rounded-lg border p-3" placeholder='Password'/>
         
         <Button onClick={handelLogin} variant={"contained"}>Login</Button>
+        <OAuth/>
       </form>
       <div className='text-center mt-4 flex gap-3 justify-center'>
         <span>

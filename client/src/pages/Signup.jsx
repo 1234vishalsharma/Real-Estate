@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import {toast , ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import OAuth from '../components/OAuth';
 
 export default function Signup() {
   const [number , setNumber] = useState();
@@ -57,6 +58,7 @@ export default function Signup() {
         <input onChange={e=>setPassword(e.target.value)} type="text" className="rounded-lg border p-3" placeholder='Password'/>
         
         <Button onClick={handelSignup} variant={"contained"}>Create Account</Button>
+        <OAuth/>
       </form>
       <div className='text-center mt-4 flex gap-3 justify-center'>
         <span>
