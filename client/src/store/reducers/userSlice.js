@@ -4,7 +4,7 @@ export const useSlice = createSlice({
   name: 'userslice',
   initialState: {
     loading: false,
-    currentUser: null,
+    currentUser:  localStorage.getItem('token') ? localStorage.getItem('token') : null,
     error: null
   },
   reducers: {
@@ -12,7 +12,9 @@ export const useSlice = createSlice({
         state.loading = true
     },
     signInSuccess: (state,action) =>{
+      console.log("action payload: ", action.payload);
         state.currentUser = action.payload;
+        console.log("current User token is : " , state.currentUser);
         state.loading = false;
         state.error = null;
     },

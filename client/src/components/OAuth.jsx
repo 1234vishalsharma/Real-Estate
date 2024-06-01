@@ -3,7 +3,7 @@ import React from 'react';
 import {app} from '../firebase';
 import {GoogleAuthProvider , getAuth ,signInWithPopup} from 'firebase/auth';
 import {useDispatch} from 'react-redux';
-import { signInSuccess } from '../store/reducers/userSlice';
+import { signInSuccess ,signInStart } from '../store/reducers/userSlice';
 import {useNavigate} from 'react-router-dom';
 import {ToastContainer , toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +13,7 @@ export default function OAuth() {
     const dispatch = useDispatch();
     const handelGoogleAuth = async() => {
         try{
+            dispatch(signInStart());
             const auth = getAuth(app);
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth , provider);
@@ -30,8 +31,11 @@ export default function OAuth() {
             });
             const data = await res.json();
             console.log(data);
+            
             if(data.success){
+                console.log(data?.token_id);
                 dispatch(signInSuccess(data?.token_id));
+                localStorage.setItem('token' , data?.token_id);
                 toast("Login Successfull" , {
                     theme: "dark",
                     type: 'success'

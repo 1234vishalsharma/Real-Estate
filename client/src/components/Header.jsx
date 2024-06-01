@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useEffect , useState } from 'react';
 import {Link} from 'react-router-dom';
 import {FaSearch} from 'react-icons/fa';
-
+import {useSelector} from 'react-redux';
+import download from '../assets/download.jpeg';
+import {useNavigate} from 'react-router-dom';
 
 export default function Header() {
-  return (
+    const router = useNavigate();
+    const [user , setUser] = useState();
+    const currentUser = useSelector((state) => state.user.currentUser);
+
+    const showProfile = () => {
+        if(user) router('/profile' ,{state: user});
+        else    router('/')
+        return;
+    }
+
+        useEffect(()=>{
+            fetch('http://localhost:8000/api/user/get_user' , {
+                method: "POST",
+                headers:{
+                    'content-type' : 'application/json',
+                },
+                body: JSON.stringify({
+                    token : currentUser
+                })
+            }).then((res)=>{
+                return res.json();
+            }).then((data)=>{
+                // console.log(data);
+                setUser(data);
+            }).catch((e)=>{
+                console.log("err occured ", e);
+            })
+        } , [currentUser]);
+  
+    return (
     <header className='w-full h-16 p-8 bg-slate-300 flex justify-between items-center'>
         <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
             <span className='text-slate-700'>
@@ -19,10 +50,12 @@ export default function Header() {
             <FaSearch/>
         </form>
 
-        <ul className='flex gap-4'>
+        <ul className='flex gap-4 items-center'>
             <Link to='/' className='hidden sm:inline cursor-pointer hover:text-slate-400'>Home</Link>
             <Link to='/About' className='hidden sm:inline cursor-pointer hover:text-slate-400'>About</Link>
-            <Link to='/Signin' className='cursor-pointer hover:text-slate-400'>Sign in</Link>
+            {!currentUser && <Link to='/Signin' className='cursor-pointer hover:text-slate-400'>Sign in</Link> }
+            {currentUser &&  user && <img onClick={showProfile}  src={user.profile_pic} alt="Loading" className='h-8 w-8 rounded-full cursor-pointer'/> }
+            
         </ul>
 
     </header>
