@@ -1,39 +1,115 @@
 import React , {useState , useEffect} from 'react'
 import {Button} from '@mui/material'
 import { Link, useLocation } from 'react-router-dom'
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { signInSuccess } from '../store/reducers/userSlice';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { app } from '../firebase';
 
 export default function Profile() {
+  const storage = getStorage(app);
   const location = useLocation();
   const data = location.state;
   console.log(data);
   const [userData , setUserData] = useState();
   const [profilePic , setProfilePic] = useState();
+  const [profile , setProfile] = useState("");
+  const [number , setNumber] = useState();
   const dispatch = useDispatch();
-  useEffect(()=>{ 
-    setUserData(data);
-  } , [data])
-  const UpdateProfilePic = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
+  
+  useEffect(()=>{
+    fetch('http://localhost:8000/api/user/get_user' , {
+        method: "POST",
+        headers:{
+            'content-type' : 'application/json',
+        },
+        body: JSON.stringify({
+            token : currentUser
+        })
+    }).then((res)=>{
+        return res.json();
+    }).then((data)=>{
+        setUserData(data);
+    }).catch((e)=>{
+        console.log("err occured ", e);
+    })
+} , [currentUser]);
 
+  const UpdateProfilePic = () => {
+      if(profilePic){
+          const metadata = {
+            contentType: userData.type
+          };
+          const refer = ref(storage, `ProfilePics/${userData?.username}` + profilePic?.name);
+          const uploadTask = uploadBytesResumable(refer, profilePic, metadata);
+    
+    
+          uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          
+    
+          progress==100 && getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            setProfile(downloadURL);
+            alert("plz press uplate profile button")
+            // saveToDb(userData.username,downloadURL);
+            console.log("profile pic uplaoded successfully");
+          });
+        },)  
+      }
   }
+   
+  
+  const UpdateUser = () => {
+    
+    const profile_pic = profile ? profile : data.profile_pic;
+
+    fetch("http://localhost:8000/api/user/UpdateUser" , {
+      method: "PUT",
+      headers: {
+        'content-type' : 'application/json'
+      },
+      body : JSON.stringify({
+        username: data.username,
+        phoneno: number,
+        profile_pic: profile_pic
+      })
+    }).then((res) => {
+      return res.json();
+    }).then((data)=>{
+      console.log(data);
+    }).catch((e)=>{
+      console.log("Error occured " , e);
+    })
+  }
+  
+  
   const openExplorer = () => {
     // uploading image to firebase and then set it to profile pic
     document.getElementById('selectFile').click();
     document.getElementById('selectFile').addEventListener('change' , function(event){
       setProfilePic(event.target.files[0]);
-    })
+      console.log(event.target.files);
+    })    
   }
+ 
+  
   const handellogout = () => {
     dispatch(signInSuccess(null));
     localStorage.removeItem("token");
   }
+  
+  
   const removeUser = () => {
     console.log("User data is (UserData state wala) : " , userData.username);
     fetch("http://localhost:8000/api/user/rm_user" , {
-      method : "POST",
+      method : "DELETE",
       headers : {
-        'contant-type' : 'application/json'
+        'content-type' : 'application/json'
       },
       body: JSON.stringify({
         username : userData?.username
@@ -42,20 +118,27 @@ export default function Profile() {
       return res.json();
     }).then((data)=>{
       console.log(data);
+      if(data.success){
+        dispatch(signInSuccess(null));
+        localStorage.removeItem('token');
+      }
     }).catch((e) => {
       console.log("Error occured: ",e.message);
     })
   }
+
+
+
   if(data){  return (
     <div>
       <h2 className='text-center text-2xl font-semibold mt-4 text-slate-600'>Profile</h2>
       <div className="flex gap-4 mt-1 p-8 items-center justify-evenly max-md:flex-col">
 
             <form className='flex gap-4 flex-col w-96 mt-10'>
-              <input className='p-4 rounded-lg border border-slate-600 text-slate-800' type="text" placeholder={userData?.name}/>
-              <input className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" placeholder={userData?.username}/>
-              <input className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" placeholder='Phone Number'/>
-              <Button variant={'contained'} style={{'backgroundColor' : 'red'}}>Update Profile</Button>
+              <input className='p-4 rounded-lg border border-slate-600 text-slate-800' type="text" value={userData?.name}/>
+              <input className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" value={userData?.username}/>
+              <input onChange={(e)=>setNumber(e.target.value)} className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" placeholder="Phone No."/>
+              <Button onClick={UpdateUser} variant={'contained'} style={{'backgroundColor' : 'red'}}>Update Profile</Button>
               <Button variant={'contained'} style={{'backgroundColor' : 'green'}}>ADD Property</Button>
               <div className='flex justify-between'>
                 <span onClick={removeUser} className="text-red-900 font-semibold cursor-pointer">Delete Account</span>
@@ -64,7 +147,8 @@ export default function Profile() {
             </form>
 
           <div className='flex flex-col gap-4 items-center justify-center'>
-            <img src={data.profile_pic} className="h-40 w-40 rounded-full" alt="Loading" />
+            { !profile && <img src={data.profile_pic} className="h-40 w-40 rounded-full" alt="Loading" />}
+            { profile && <img src={profile} className="h-40 w-40 rounded-full" alt="Loading" />}
             <div className='flex gap-4'>
               <Button  onClick={openExplorer} variant="contained" style={{"backgroundColor" : "red"}}>Change Avatar
               <input id='selectFile' type="file" hidden />

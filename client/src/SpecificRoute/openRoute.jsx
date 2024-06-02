@@ -5,7 +5,7 @@ function OpenRoute({children}){
     
     const token = useSelector((state) => state.user.currentUser);
     if(token != null){
-        <Navigate  to='/'/>    
+        return <Navigate  to ='/Home'/>    
     }else{
         return children;
     }

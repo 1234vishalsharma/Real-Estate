@@ -15,6 +15,7 @@ function App() {
       <Header/>
       <Routes>
         <Route path="/" element={<Home/>}/>
+        <Route path="/Home" element={<Home/>}/>
         
           <Route path="/Signin" element={
             <OpenRoute>

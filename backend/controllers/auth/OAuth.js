@@ -18,6 +18,8 @@ const OAuth = async(req,res) => {
             const CreateUser = await User.create({name , username:email , password: hashedPassword , profilepic: photo });
             const token = jwt.sign({username , pass} , process.env.SECRET , {expiresIn : age});
             return res.status(200).json({
+                message: "User Created Successfully",
+                success: true,
                 CreateUser,
                 token_id:token
             });
@@ -28,7 +30,7 @@ const OAuth = async(req,res) => {
             const token = jwt.sign({username , passDecode} , process.env.SECRET , {expiresIn: age});
             
             return res.status(200).json(    {
-                message: "User created successfully",
+                message: "User loged in successfully",
                 token_id: token,
                 success: true
             });

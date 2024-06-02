@@ -11,17 +11,22 @@ export default function Signin() {
 
   const router = useNavigate();
   const [username , setUsername] = useState("");
-  const [password , setPassword] = useState(""); 
+  const [password , setPassword] = useState("");  
   const dispatch = useDispatch();  
-  const {error} = useSelector((state) => state.user);
+ 
+  const error = useSelector((state) => state.user.error);
+ 
   useEffect(()=>{
     notify(error);
   },[error])
+
   const notify = (text) => {
-    toast(text , {
+   
+      toast(text , {
       theme: "dark",
       type: "error"
     });
+  
   }
   const handelLogin = (e) => {
     e.preventDefault();
