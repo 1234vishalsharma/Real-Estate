@@ -10,12 +10,13 @@ const getUSer = async(req,res) => {
         const username = decode.username;
         console.log("ye raha username " , username);
         const isUserExist = await User.findOne({username});
-        console.log(isUserExist);
+        console.log("existed user: " , isUserExist);
         if(isUserExist){ 
            return res.status(200).json({
                 username,
                 name: isUserExist.name,
-                profile_pic: isUserExist.profilepic
+                profile_pic: isUserExist.profilepic,
+                phoneno: isUserExist.phoneno,
             });
         }
 

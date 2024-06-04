@@ -1,10 +1,10 @@
 const User = require('../model/UserSchema');
 
 const UpdateUser = async(req,res) => {
-    const {username , phoneno , profile_pic} = req.body;
+    const {username , phoneno  , name, profile_pic} = req.body;
     console.log("update body is: " , req.body);
     try{
-         const updateUser = await User.findOneAndUpdate( {username} ,{$set: {phoneno , profilepic : profile_pic} } , {
+         const updateUser = await User.findOneAndUpdate( {username} ,{$set: {phoneno , profilepic : profile_pic , name: name} } , {
             returnDocument: 'after'});
          if(updateUser){
             return res.status(200).json({

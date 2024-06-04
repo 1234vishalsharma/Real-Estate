@@ -1,46 +1,27 @@
 import React , {useState , useEffect} from 'react'
 import {Button} from '@mui/material'
-import { Link, useLocation } from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux';
 import { signInSuccess } from '../store/reducers/userSlice';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from '../firebase';
+
 
 export default function Profile() {
-  const storage = getStorage(app);
-  const location = useLocation();
-  const data = location.state;
-  console.log(data);
+  
   const [userData , setUserData] = useState();
-  const [profilePic , setProfilePic] = useState();
+  const [profilePic , setProfilePic] = useState(null);
   const [profile , setProfile] = useState("");
+  const [name , setName] = useState();
   const [number , setNumber] = useState();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
-  
-  useEffect(()=>{
-    fetch('http://localhost:8000/api/user/get_user' , {
-        method: "POST",
-        headers:{
-            'content-type' : 'application/json',
-        },
-        body: JSON.stringify({
-            token : currentUser
-        })
-    }).then((res)=>{
-        return res.json();
-    }).then((data)=>{
-        setUserData(data);
-    }).catch((e)=>{
-        console.log("err occured ", e);
-    })
-} , [currentUser]);
 
+ 
   const UpdateProfilePic = () => {
       if(profilePic){
           const metadata = {
-            contentType: userData.type
+            contentType: profilePic.type
           };
+          const storage = getStorage();
           const refer = ref(storage, `ProfilePics/${userData?.username}` + profilePic?.name);
           const uploadTask = uploadBytesResumable(refer, profilePic, metadata);
     
@@ -61,27 +42,30 @@ export default function Profile() {
           });
         },)  
       }
-  }
-   
+  }   
   
   const UpdateUser = () => {
     
-    const profile_pic = profile ? profile : data.profile_pic;
-
+    const profile_pic = profile ? profile : userData.profile_pic;
+    console.log("Current user token is: " , currentUser);
     fetch("http://localhost:8000/api/user/UpdateUser" , {
       method: "PUT",
       headers: {
-        'content-type' : 'application/json'
+        'content-type' : 'application/json',
+        'token' : currentUser
       },
       body : JSON.stringify({
-        username: data.username,
+        username: userData?.username,
+        name,
         phoneno: number,
-        profile_pic: profile_pic
+        profile_pic
       })
     }).then((res) => {
       return res.json();
     }).then((data)=>{
-      console.log(data);
+      console.log("Updates data is here : " , data);
+      setUserData(data?.User);
+    
     }).catch((e)=>{
       console.log("Error occured " , e);
     })
@@ -105,7 +89,6 @@ export default function Profile() {
   
   
   const removeUser = () => {
-    console.log("User data is (UserData state wala) : " , userData.username);
     fetch("http://localhost:8000/api/user/rm_user" , {
       method : "DELETE",
       headers : {
@@ -126,20 +109,45 @@ export default function Profile() {
       console.log("Error occured: ",e.message);
     })
   }
+  const addPost = () => {
+    alert("Feature Comming soon...")
+  }
+
+ 
+
+  useEffect(()=>{
+    fetch('http://localhost:8000/api/user/get_user' , {
+        method: "POST",
+        headers:{
+            'content-type' : 'application/json',
+        },
+        body: JSON.stringify({
+            token : currentUser
+        })
+    }).then((res)=>{
+        return res.json();
+    }).then((data)=>{
+        setUserData(data);
+        console.log("User data ye hai: ", data);
+
+    }).catch((e)=>{
+        console.log("err occured ", e);
+    })
+} , [currentUser]);
 
 
 
-  if(data){  return (
+  if (userData) return (
     <div>
       <h2 className='text-center text-2xl font-semibold mt-4 text-slate-600'>Profile</h2>
       <div className="flex gap-4 mt-1 p-8 items-center justify-evenly max-md:flex-col">
 
             <form className='flex gap-4 flex-col w-96 mt-10'>
-              <input className='p-4 rounded-lg border border-slate-600 text-slate-800' type="text" value={userData?.name}/>
+              <input onChange = {(e)=>setName(e.target.value)} className='p-4 rounded-lg border border-slate-600 text-slate-800' type="text" defaultValue={userData?.name}/>
               <input className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" value={userData?.username}/>
-              <input onChange={(e)=>setNumber(e.target.value)} className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" placeholder="Phone No."/>
+              <input onChange={(e)=>setNumber(e.target.value)} className='p-4 rounded-lg border border-slate-600 text-slate-800'  type="text" defaultValue  ={userData?.phoneno}/>
               <Button onClick={UpdateUser} variant={'contained'} style={{'backgroundColor' : 'red'}}>Update Profile</Button>
-              <Button variant={'contained'} style={{'backgroundColor' : 'green'}}>ADD Property</Button>
+              <Button onClick={addPost} variant={'contained'} style={{'backgroundColor' : 'green'}}>ADD Property</Button>
               <div className='flex justify-between'>
                 <span onClick={removeUser} className="text-red-900 font-semibold cursor-pointer">Delete Account</span>
                 <span onClick={handellogout} className='font-semibold text-blue-700 cursor-pointer'>Logout</span>
@@ -147,7 +155,7 @@ export default function Profile() {
             </form>
 
           <div className='flex flex-col gap-4 items-center justify-center'>
-            { !profile && <img src={data.profile_pic} className="h-40 w-40 rounded-full" alt="Loading" />}
+            { !profile && <img src={userData.profile_pic} className="h-40 w-40 rounded-full" alt="Loading" />}
             { profile && <img src={profile} className="h-40 w-40 rounded-full" alt="Loading" />}
             <div className='flex gap-4'>
               <Button  onClick={openExplorer} variant="contained" style={{"backgroundColor" : "red"}}>Change Avatar
@@ -158,5 +166,5 @@ export default function Profile() {
         </div>      
       </div>
     </div>
-  )}
+  )
 }

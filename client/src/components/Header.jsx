@@ -2,19 +2,21 @@ import React, { useEffect , useState } from 'react';
 import {Link} from 'react-router-dom';
 import {FaSearch} from 'react-icons/fa';
 import {useSelector} from 'react-redux';
-import download from '../assets/download.jpeg';
 import {useNavigate} from 'react-router-dom';
 
 export default function Header() {
     const router = useNavigate();
-    const [user , setUser] = useState();
+    const [userpic , setUserpic] = useState();
     const currentUser = useSelector((state) => state.user.currentUser);
 
     const showProfile = () => {
-        if(user) router('/profile' ,{state: user});
-        else    router('/')
+        router('/profile');
         return;
     }
+
+    useEffect(()=>{
+        console.log("Header Component rerendered");
+    } , [userpic]);
 
         useEffect(()=>{
             fetch('http://localhost:8000/api/user/get_user' , {
@@ -29,11 +31,11 @@ export default function Header() {
                 return res.json();
             }).then((data)=>{
                 // console.log(data);
-                setUser(data);
+                setUserpic(data.profile_pic);
             }).catch((e)=>{
                 console.log("err occured ", e);
             })
-        } , [currentUser]);
+        } , [currentUser , userpic]);
   
     return (
     <header className='w-full h-16 p-8 bg-slate-300 flex justify-between items-center'>
@@ -54,8 +56,7 @@ export default function Header() {
             <Link to='/' className='hidden sm:inline cursor-pointer hover:text-slate-400'>Home</Link>
             <Link to='/About' className='hidden sm:inline cursor-pointer hover:text-slate-400'>About</Link>
             {!currentUser && <Link to='/Signin' className='cursor-pointer hover:text-slate-400'>Sign in</Link> }
-            {currentUser &&  user && <img onClick={showProfile}  src={user.profile_pic} alt="Loading" className='h-8 w-8 rounded-full cursor-pointer'/> }
-            
+            {currentUser &&  userpic && <img onClick={showProfile}  src={userpic} alt="Loading" className='h-8 w-8 rounded-full cursor-pointer'/> }
         </ul>
 
     </header>
