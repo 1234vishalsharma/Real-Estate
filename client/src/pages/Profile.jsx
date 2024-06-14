@@ -3,6 +3,7 @@ import {Button} from '@mui/material'
 import {useDispatch, useSelector} from 'react-redux';
 import { signInSuccess } from '../store/reducers/userSlice';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Profile() {
@@ -14,7 +15,7 @@ export default function Profile() {
   const [number , setNumber] = useState();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
-
+  const router = useNavigate();
  
   const UpdateProfilePic = () => {
       if(profilePic){
@@ -22,7 +23,7 @@ export default function Profile() {
             contentType: profilePic.type
           };
           const storage = getStorage();
-          const refer = ref(storage, `ProfilePics/${userData?.username}` + profilePic?.name);
+          const refer = ref(storage, `ProfilePics/${userData?.username}/` + profilePic?.name);
           const uploadTask = uploadBytesResumable(refer, profilePic, metadata);
     
     
@@ -110,12 +111,10 @@ export default function Profile() {
     })
   }
   const addPost = () => {
-    alert("Feature Comming soon...")
+    router('/PostSite');
   }
 
- 
-
-  useEffect(()=>{
+   useEffect(()=>{
     fetch('http://localhost:8000/api/user/get_user' , {
         method: "POST",
         headers:{

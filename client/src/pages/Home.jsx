@@ -1,12 +1,18 @@
-import React from 'react'
+import React from 'react';
+import {useNavigate} from 'react-router-dom';
 
 export default function Home() {
+  const router = useNavigate();
+  const GotoExplore = () => { 
+    router('/Explore');
+    
+  }
   return ( 
     <div className='flex flex-col gap-8'>
       <div className='flex flex-col gap-4 mt-16 ml-16'>
         <h1 className="text-slate-700 font-bold text-3xl lg:text-5xl">Find your dream <span class="text-slate-500">Place</span> <br/>  with RealEstate</h1>
         <p className='text-md text-cyan-800 font-semibold'>RealEstate is a online Property Commerce Site for Purchasers and Tenants.</p>
-        <button className="text-xl max-sm:w-32 w-96 p-2 border border-black rounded-lg" >Explore sites</button>
+        <button onClick={GotoExplore} className="text-xl max-sm:w-32 w-96 p-2 border border-black rounded-lg" >Explore sites</button>
       </div>
 
     {/* cards section */}
@@ -63,8 +69,7 @@ export default function Home() {
                   </div>
                 </div>
         </div>
-        
-        
+             
       </div>
     </div>
   )

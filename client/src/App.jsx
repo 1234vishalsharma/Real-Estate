@@ -8,6 +8,8 @@ import About from './pages/About';
 import Profile from './pages/Profile';
 import OpenRoute from './SpecificRoute/openRoute'
 import PrivateRoute from './SpecificRoute/PrivateRoute';
+import Explore from './pages/Explore';
+import PostProperty from './pages/PostProperty';
 
 function App() {
   return (
@@ -32,7 +34,17 @@ function App() {
           <PrivateRoute>
             <Profile/>
           </PrivateRoute>}/>
+        
         <Route path="/about" element={<About/>}/>
+        
+        <Route path="/Explore" element={<Explore/>}/>
+        
+        <Route path="/PostSite" element={
+          <PrivateRoute>  
+            <PostProperty/>
+          </PrivateRoute>
+      }/>
+      
       </Routes>
   </BrowserRouter>
   )

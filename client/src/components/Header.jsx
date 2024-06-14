@@ -39,14 +39,14 @@ export default function Header() {
   
     return (
     <header className='w-full h-16 p-8 bg-slate-300 flex justify-between items-center'>
-        <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
+        <Link to="/" className='font-bold text-sm sm:text-xl flex flex-wrap'>
             <span className='text-slate-700'>
                 Real
             </span>
             <span className='text-slate-800'>
                 Estate
             </span>
-        </h1>
+        </Link>
         <form className='p-3 rounded-lg bg-slate-100 flex items-center'>
             <input className="bg-transparent focus:outline-none" type="text" placeholder='Search...' />
             <FaSearch/>
