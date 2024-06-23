@@ -39,7 +39,7 @@ function App() {
         
         <Route path="/Explore" element={<Explore/>}/>
         
-        <Route path="/PostSite" element={
+        <Route path="/PostSite/:PID" element={
           <PrivateRoute>  
             <PostProperty/>
           </PrivateRoute>

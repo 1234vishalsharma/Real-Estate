@@ -1,67 +1,92 @@
 import React, { useState } from 'react'
 import { TextField , Button  ,Typography } from '@mui/material';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { useEffect } from 'react';
-import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-
-function Generate(){
-    const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const lowercase = "abcdefghijklmnopqrstuvwxyz";
-    const number = "1234567890";
-    const symbol = '!@#$%^&*?|';
-    const allSymbols = uppercase + lowercase + number + symbol;
-    let pid = "";    
-    for(let i = 0;i < 8; i++){
-        let ind = Math.floor(Math.random() * allSymbols.length);
-        pid += allSymbols[ind];
-    }
-    console.log("pid is " , pid);
-    return pid;
-}
-
+import { useParams } from 'react-router-dom';
 
 export default function PostProperty() {
-    const [rent , setRent] = useState(false);
-    const [sell , setSell] = useState(false);
-    const [siteImages , setSiteImages] = useState();
-    const pid = Generate();
-    const UploadSiteImages = () => {
-        if(siteImages){
-            const metadata = {
-              contentType: siteImages.type
-            };
-            const storage = getStorage();
-            const refer = ref(storage, `SiteImages/${pid}/` + siteImages?.name);
-            const uploadTask = uploadBytesResumable(refer, siteImages, metadata);
-      
-      
-            uploadTask.on('state_changed',
-          (snapshot) => {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            
-      
-            progress==100 && getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              console.log('site images', downloadURL);
-            });
-          },)  
+    const {PID} = useParams();
+    const [Sitename , setSiteName] = useState();
+    const [Sitedesc , setSiteDesc] = useState();
+    const [rent , setRent] = useState(true); 
+    const [sell , setSell] = useState(false); 
+    const [parking , setParking] = useState(false); 
+    const [bedrooms, setBedrooms] = useState(0); 
+    const [bathrooms , setBathrooms] = useState(0); 
+    const [regularPrice , setRegularPrice] = useState(); 
+    const [discountedPrice , setDiscountedPrice] = useState(); 
+    const [ImageUrls , setImageUrls] = useState([]);
+    const [siteImages , setSiteImages] = useState([]);
+    const handelSell = () => {
+        setSell(true);
+        setRent(false);
+        
+    }
+    const handelRent = () => {
+        setRent(true);
+        setSell(false);
+    }
+    const UploadSiteImages = async() => {
+        console.log("Image details are: ", siteImages , PID);
+        let i = 0;
+        while(i < siteImages.length){
+            if(PID && siteImages[i]){
+                const metadata = {
+                  contentType: siteImages[i].type
+                };
+                const storage = getStorage();
+                const refer = ref(storage, `SiteImages/${PID}/` + siteImages[i]?.name);
+                const uploadTask = uploadBytesResumable(refer, siteImages[i], metadata);
+          
+                uploadTask.on('state_changed', (snapshot) => {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                
+                progress==100 && getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                  console.log('site images', downloadURL);
+                  setImageUrls( [...ImageUrls , downloadURL]);
+                  
+                });
+              },)  
+            }
+            i++;
         }
     }
 
+    const postData = () => {
+        if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls){
+            alert("Cannot post data please fill all fields carefully");
+        }
+        if(!PID){
+            alert("Something Went Wrong");
+        }
+        console.log("Site data is " , {PID ,Sitename, Sitedesc, rent, sell, parking, bedrooms, bathrooms, regularPrice, discountedPrice , ImageUrls});
+    }
+
+    useEffect(()=>{
+        console.log("Rent: ", rent, "Sell is: ",sell);
+        console.log("parking is: ", parking);
+        console.log("bedrooms is: ", bedrooms);
+        console.log("bathrooms is: ", bathrooms);
+        console.log("regularPrice is: ", regularPrice);
+        console.log("discountedPrice is: ", discountedPrice);
+    }, [rent,sell,parking,bedrooms,bathrooms,regularPrice,discountedPrice])
+
   return (
-    <div className='flex justify-center mt-8 gap-32'>
-        
+    <div className='justify-center mt-8 gap-32 sm:flex'>
+         
         <div className='flex flex-col items-center gap-10'>
         <h2 className='text-center text-2xl text-slate-700 font-bold'>Post Property</h2>    
             <div className='flex flex-col items-center gap-4'>
-                <TextField style={{"width": "20rem"}} label="Site Name / Address"></TextField>
-                <TextField style={{"width": "20rem"}} label="Site Description"></TextField>
+                <TextField onChange={(e)=>setSiteName(e.target.value)} style={{"width": "20rem"}} label="Site Name / Address"></TextField>
+                <TextField onChange={(e)=>setSiteDesc(e.target.value)} style={{"width": "20rem"}} label="Site Description"></TextField>
             </div>
             <div className='border border-black p-4 w-96'>
-                <input onChange= {(e) => setSiteImages(e.target.files)} type="file" className="w-64"/>
+                <input onChange= {(e) => setSiteImages(e.target.files)} type="file" multiple className="w-64"/>
                 <Button onClick={UploadSiteImages} variant= {"contained"} style={{"backgroundColor":"red"}}> Upload</Button>
             </div>
-            <Button variant={"contained"} style={{"width":"20rem", "backgroundColor":"Green"}}>Post Site</Button>
+            <Button onClick={postData} variant={"contained"} style={{"width":"20rem", "backgroundColor":"Green"}}>Post Site</Button>
         </div>  
 
         {/* <div className='mt-16'>
@@ -135,19 +160,52 @@ export default function PostProperty() {
         </div>   */}
 
         <div className='mt-8'>
-            <div>
-                <Typography variant={'h6'}>More information</Typography>
+            <div className='text-center'>
+                <Typography style ={{'font': 'bold', 'fontSize':'20px', 'fontWeight':'600'}} variant={'h6'}>More information</Typography>
             </div>
 
-            <div className='flex gap-8 mt-5'>
-                <div className='flex items-center justify-center gap-2'>
-                    <input onClick={(e)=>setRent(!rent)} className='h-6 w-6' type="radio" name='type' />
+            <div className='flex gap-2 mt-5 flex-col'>
+                <Typography style ={{'font': 'bold', 'fontSize':'20px', 'fontWeight':'600'}}>Type</Typography>
+                <div className='flex gap-2 ml-6'>
+                    <input defaultChecked onClick={handelRent} className='h-6 w-6' type="radio" name='type' />
                     <Typography>Rent</Typography>
                 </div>
 
-                <div className='flex items-center justify-center gap-2'>
-                    <input onChange={(e)=>setSell(!sell)} className='h-6 w-6' type="radio" name="type" />
+                <div className='flex gap-2 ml-6'>
+                    <input onClick={handelSell} className='h-6 w-6' type="radio" name="type" />
                     <Typography>Sell</Typography>
+                </div>
+
+            </div>
+            <div className='flex flex-col gap-2 mt-4'>
+                    <Typography style ={{'font': 'bold', 'fontSize':'20px', 'fontWeight':'600'}}>Additional</Typography>
+                <div className='flex gap-2 ml-6'>
+                    <input onChange={(e)=>{setParking(!parking)}} className='h-6 w-6' type="checkbox" name="type" />
+                    <Typography style={{'marginLeft':'32px'}}>Parking</Typography>
+                </div>
+                <div className='flex gap-2 ml-6'>
+                    <input defaultValue={0} onChange={(e)=>setBedrooms(e.target.value)} className='h-8 w-14 border border-black outline-none p-2' type="number" name="type" />
+                    <Typography>Bedrooms</Typography>
+                </div>
+                <div className='flex gap-2 ml-6'>
+                    <input defaultValue={0} onChange={(e)=>setBathrooms(e.target.value)} className='h-8 w-14 border border-black outline-none p-2' type="number" name="type" />
+                    <Typography>Bathrooms</Typography>
+                </div>
+            </div>
+
+            <div className='flex flex-col items-start gap-2 mt-6'>
+                <Typography style ={{'font': 'bold', 'fontSize':'20px', 'fontWeight':'600'}}>Price</Typography>
+
+                <div className='flex items-center justify-center gap-2 ml-6'>
+                    <Typography>Regular price  </Typography>
+                    <input onChange={(e)=>setRegularPrice(e.currentTarget.value)} className='h-8 w-32 border border-black outline-none p-2 ml-8' type="number" name="type" />
+                    {sell  ? <span>₹</span> :  <span>₹/month</span>}
+                </div>
+                
+                <div className='flex items-center justify-center gap-2 ml-6'>
+                    <Typography>Discounted price  </Typography>
+                    <input onChange={(e)=>setDiscountedPrice(e.currentTarget.value)} className='h-8 w-32 border ml-2 border-black outline-none p-2' type="number" name="type" />
+                    {rent == false ? <span>₹</span> :  <span>₹/month</span>}
                 </div>
 
             </div>

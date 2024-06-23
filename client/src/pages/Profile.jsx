@@ -6,6 +6,21 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { useNavigate } from 'react-router-dom';
 
 
+function Generate(){
+  const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lowercase = "abcdefghijklmnopqrstuvwxyz";
+  const number = "1234567890";
+  const symbol = '!@#$%^&*';
+  const allSymbols = uppercase + lowercase + number + symbol;
+  let pid = "";    
+  for(let i = 0;i < 8; i++){
+      let ind = Math.floor(Math.random() * allSymbols.length);
+      pid += allSymbols[ind];
+  }
+  return pid;
+}
+
+
 export default function Profile() {
   
   const [userData , setUserData] = useState();
@@ -111,7 +126,8 @@ export default function Profile() {
     })
   }
   const addPost = () => {
-    router('/PostSite');
+    const PID = Generate();
+    router(`/PostSite/${PID}`);
   }
 
    useEffect(()=>{
