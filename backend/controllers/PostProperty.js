@@ -1,35 +1,46 @@
 const Property = require('../model/PropertySchema');
-const Generate = require('../utils/GeneratePid'); 
-
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const uploadSiteImages = (siteImages) => {
-    
+    // upload images to firebase
 }
-
 
 const PostProperty = async(req,res) => {
     try{
-        const pid = Generate();
-        const data = req.body;  
-        const siteImages = req.files;
-        uploadSiteImages(siteImages);
-        console.log("data is: " , data , "files: " , siteImages);
+        //  PID , Sitename , Sitedesc , rent , sell , parking , bedrooms, bathrooms , regularPrice , discountedPrice , ImageUrls
+        console.log("request is: " , req.body);
+        const {PID} = req.body;  
+        const {Sitename} = req.body;  
+        const {Sitedesc} = req.body;
+        const {sell} = req.body;
+        const {parking} = req.body;
+        const {bedrooms} = req.body;
+        const {bathrooms} = req.body;
+        const {regularPrice} = req.body;
+        const {discountedPrice} = req.body;
+        const {ImageUrls} = req.body;
+        const {token} = req.headers;
+        const sitetype = sell===true ? "sell" : "rent";
+        const user = jwt.verify(token , process.env.SECRET);     
+        
+        // uploadSiteImages(ImageUrls);
+        console.log("data is: " , req.body);
 
-        if(pid){
-            
+        if(PID){
             const postProperty = await Property.create({
-                pid,
-                name:data.name,
-                desc:data.desc,
-                addresss: data.address,
-                regularPrice: data.regularPrice,
-                DiscountedPrice: data.DiscountedPrice,
-                bathrooms: data.bathrooms,
-                bedrooms: data.bedrooms,
-                sitetype: data.sitetype,
-                parking: data.parking,
-                images: siteImages,
-                user: data.user
+                pid: PID,
+                name:Sitename,
+                desc:Sitedesc,
+                address: Sitename,
+                regularPrice,
+                discountedPrice,
+                bathrooms: bathrooms,
+                bedrooms: bedrooms,
+                sitetype: sitetype,
+                parking: parking,
+                images: ImageUrls,
+                user: user.toString()
             });
 
 

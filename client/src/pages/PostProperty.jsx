@@ -3,6 +3,7 @@ import { TextField , Button  ,Typography } from '@mui/material';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function PostProperty() {
     const {PID} = useParams();
@@ -17,6 +18,8 @@ export default function PostProperty() {
     const [discountedPrice , setDiscountedPrice] = useState(); 
     const [ImageUrls , setImageUrls] = useState([]);
     const [siteImages , setSiteImages] = useState([]);
+    const token = useSelector(state => state.user.currentUser);
+
     const handelSell = () => {
         setSell(true);
         setRent(false);
@@ -45,8 +48,7 @@ export default function PostProperty() {
                 
                 progress==100 && getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                   console.log('site images', downloadURL);
-                  setImageUrls( [...ImageUrls , downloadURL]);
-                  
+                  setImageUrls(prev => [...prev , downloadURL]);                  
                 });
               },)  
             }
@@ -55,12 +57,28 @@ export default function PostProperty() {
     }
 
     const postData = () => {
-        if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls){
-            alert("Cannot post data please fill all fields carefully");
-        }
-        if(!PID){
-            alert("Something Went Wrong");
-        }
+        // if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls){
+        //     alert("Cannot post data please fill all fields carefully");
+        // }
+        // if(!PID){
+        //     alert("Something Went Wrong");
+        // }
+        console.log(token);
+        fetch('http://localhost:8000/api/user/post_property',{
+            method : "POST",
+            headers : {
+                "content-type" : "application/json",
+                "token" : token
+            },
+            body : JSON.stringify({
+                PID , Sitename , Sitedesc , rent , sell , parking , bedrooms, bathrooms , regularPrice , discountedPrice , ImageUrls
+            })
+        }).then((res)=>{
+            return res.json();
+        }).then((data) => {
+            console.log("Data is: " , data);
+        })
+
         console.log("Site data is " , {PID ,Sitename, Sitedesc, rent, sell, parking, bedrooms, bathrooms, regularPrice, discountedPrice , ImageUrls});
     }
 

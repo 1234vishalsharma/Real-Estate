@@ -19,18 +19,18 @@ const Property = new mongoose.Schema({
         requrie: true
     },
     regularPrice: {
-        type: Number,
+        type: String,
         required: true
     },
     DiscountedPrice: {
-        type: Number,
+        type: String,
     },
     bathrooms: {
-        type:Number,
+        type:String,
         required: true
     },
     bedrooms:{
-        type: Number,
+        type: String,
         required: true
     },
     sitetype: {
