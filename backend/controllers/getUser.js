@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../model/UserSchema');
 require("dotenv").config();
-const getUSer = async(req,res) => {
+const getUser = async(req,res) => {
     try{
 
         const token = req.body.token;
@@ -34,4 +34,4 @@ const getUSer = async(req,res) => {
     }
 }
 
-module.exports = getUSer;
+module.exports = getUser;

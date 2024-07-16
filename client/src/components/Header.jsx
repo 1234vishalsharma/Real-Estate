@@ -15,7 +15,6 @@ export default function Header() {
     }
 
     useEffect(()=>{
-        console.log("Header Component rerendered");
     } , [userpic]);
 
         useEffect(()=>{

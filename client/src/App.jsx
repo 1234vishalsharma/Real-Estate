@@ -10,6 +10,7 @@ import OpenRoute from './SpecificRoute/openRoute'
 import PrivateRoute from './SpecificRoute/PrivateRoute';
 import Explore from './pages/Explore';
 import PostProperty from './pages/PostProperty';
+import Site from './pages/Site';
 
 function App() {
   return (
@@ -39,6 +40,12 @@ function App() {
         
         <Route path="/Explore" element={<Explore/>}/>
         
+        <Route path="/SiteView/:pid" element = {
+          <PrivateRoute>
+            <Site/>
+          </PrivateRoute>
+        }/>
+
         <Route path="/PostSite/:PID" element={
           <PrivateRoute>  
             <PostProperty/>
