@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { TextField , Button  ,Typography } from '@mui/material';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {  useParams  } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function PostProperty() {
     const {PID} = useParams();
@@ -30,6 +30,7 @@ export default function PostProperty() {
         setSell(false);
     }
     const UploadSiteImages = async() => {
+        const toastID = toast.loading("Uploading Files...");
         console.log("Image details are: ", siteImages , PID);
         let i = 0;
         while(i < siteImages.length){
@@ -54,15 +55,25 @@ export default function PostProperty() {
             }
             i++;
         }
+        if(i == siteImages.length){
+            setTimeout(() => {
+                toast.success("Files Uploaded Successfully");
+                toast.dismiss(toastID);
+            } , 2000);
+        }
     }
 
     const postData = () => {
-        // if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls){
-        //     alert("Cannot post data please fill all fields carefully");
-        // }
-        // if(!PID){
-        //     alert("Something Went Wrong");
-        // }
+        
+        if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls){
+            alert("Cannot post data please fill all fields carefully");
+            return;
+        }
+        if(!PID){
+            alert("Something Went Wrong");
+            return;
+        }
+        const toastId = toast.loading("Posting Site...");
         console.log(token);
         fetch('http://localhost:8000/api/user/post_property',{
             method : "POST",
@@ -76,24 +87,33 @@ export default function PostProperty() {
         }).then((res)=>{
             return res.json();
         }).then((data) => {
+            setTimeout(() => {
+                toast.success("Posting Successful");
+                toast.dismiss(toastId);
+            } , 2000);
             console.log("Data is: " , data);
+        }).catch((e) => {
+            setTimeout(() => {
+                toast.success("Posting Discarded");
+                toast.dismiss(toastId);
+            } , 2000);
         })
-
+        
         console.log("Site data is " , {PID ,Sitename, Sitedesc, rent, sell, parking, bedrooms, bathrooms, regularPrice, discountedPrice , ImageUrls});
     }
 
     useEffect(()=>{
-        console.log("Rent: ", rent, "Sell is: ",sell);
-        console.log("parking is: ", parking);
-        console.log("bedrooms is: ", bedrooms);
-        console.log("bathrooms is: ", bathrooms);
-        console.log("regularPrice is: ", regularPrice);
-        console.log("discountedPrice is: ", discountedPrice);
+        // console.log("Rent: ", rent, "Sell is: ",sell);
+        // console.log("parking is: ", parking);
+        // console.log("bedrooms is: ", bedrooms);
+        // console.log("bathrooms is: ", bathrooms);
+        // console.log("regularPrice is: ", regularPrice);
+        // console.log("discountedPrice is: ", discountedPrice);
     }, [rent,sell,parking,bedrooms,bathrooms,regularPrice,discountedPrice])
 
   return (
     <div className='justify-center mt-8 gap-32 sm:flex'>
-         
+        <Toaster/>
         <div className='flex flex-col items-center gap-10'>
         <h2 className='text-center text-2xl text-slate-700 font-bold'>Post Property</h2>    
             <div className='flex flex-col items-center gap-4'>

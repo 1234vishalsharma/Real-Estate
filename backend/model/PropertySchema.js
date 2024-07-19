@@ -22,8 +22,9 @@ const Property = new mongoose.Schema({
         type: String,
         required: true
     },
-    DiscountedPrice: {
+    discountedPrice: {
         type: String,
+        required: true,
     },
     bathrooms: {
         type:String,
@@ -36,6 +37,10 @@ const Property = new mongoose.Schema({
     sitetype: {
         type: String,
         required: true
+    },
+    ptype : {
+        type: String,
+        require: true
     },
     parking: {
         type: Boolean,
