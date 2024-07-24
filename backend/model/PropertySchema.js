@@ -34,13 +34,13 @@ const Property = new mongoose.Schema({
         type: String,
         required: true
     },
+    area:{
+        type: Number,
+        required: true
+    },
     sitetype: {
         type: String,
         required: true
-    },
-    ptype : {
-        type: String,
-        require: true
     },
     parking: {
         type: Boolean,

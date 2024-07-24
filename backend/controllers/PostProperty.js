@@ -12,10 +12,12 @@ const PostProperty = async(req,res) => {
         console.log("request is: " , req.body);
         const {PID} = req.body;  
         const {Sitename} = req.body;  
+        const {SiteAddress} = req.body;  
         const {Sitedesc} = req.body;
         const {sell} = req.body;
         const {parking} = req.body;
         const {bedrooms} = req.body;
+        const {area} = req.body;
         const {bathrooms} = req.body;
         const {regularPrice} = req.body;
         const {discountedPrice} = req.body;
@@ -32,11 +34,12 @@ const PostProperty = async(req,res) => {
                 pid: PID,
                 name:Sitename,
                 desc:Sitedesc,
-                address: Sitename,
+                address: SiteAddress,
                 regularPrice,
                 discountedPrice,
                 bathrooms: bathrooms,
                 bedrooms: bedrooms,
+                area: area,
                 sitetype: sitetype,
                 parking: parking,
                 images: ImageUrls,

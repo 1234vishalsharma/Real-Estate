@@ -37,7 +37,7 @@ export default function Header() {
         } , [currentUser , userpic]);
   
     return (
-    <header className='w-full h-16 p-8 bg-slate-300 flex justify-between items-center'>
+    <header className='fixed z-10 w-full h-16 p-8 bg-slate-300 flex justify-between items-center'>
         <Link to="/" className='font-bold text-sm sm:text-xl flex flex-wrap'>
             <span className='text-slate-700'>
                 Real

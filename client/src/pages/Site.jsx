@@ -13,23 +13,28 @@ function Site(){
     }
 
     return(
-        <div className='flex h-full w-full bg-[#e5e5e5]'>
-            <div className=' flex gap-8 w-full m-10 h-96 '>
+        <div className='flex flex-col h-full max-w-screen pt-16'>
+            <span className='text-center mt-4 mb-3 text-lg font-bold'>Site Overview</span>
+            <div className=' flex gap-8S flex-col'>
                  {/* temporary single image tag, here crousel will be implemented. */}
-                 <SimpleImageSlider style={{'objectFit' : 'cover'}} width={800} loop={true} height={400} images={data.images} autoPlay={true} showBullets={true} showNavs={true}/>
-               <div className='flex flex-col gap-1'>
-                <span className='text-center font-bold text-xl'>Site Details</span>
+                 <div className='flex gap-2 justify-center '>
+                    <SimpleImageSlider  width={700} height={500} loop={true} images={data.images} autoPlay={true} showNavs={true}/>
+                    {/* <SimpleImageSlider style={{'border':'2px solid black'}} width={700} height={500} loop={true} images={data.images} autoPlay={true} showNavs={true}/> */}
+                 </div>
+               <div className='flex flex-col gap-1 ml-10'>
+                    <span className='font-bold text-xl'>Site Details</span>
                     <Typography>Site Name - <span className='text-lg'>{data.name} </span></Typography>
                     <Typography>Site Description - <span className='text-lg'>{data.desc} </span></Typography>
-                    <Typography>Address - <span className='text-lg'>{data.address} </span></Typography>
+                    <Typography>Location - <span className='text-lg'>{data.address} </span></Typography>
+                    <Typography>Area - <span className='text-lg'>{data.area} sqft</span></Typography>
                     <Typography>Parking - <span className='text-lg'>{data.parking ? <span className='text-green-700'>Available</span> : <span className='text-red-700'>Not Available</span>} </span></Typography>
                     <Typography>Bedrooms - <span className='text-lg'>{data.bedrooms} </span></Typography>
                     <Typography>Bathrooms - <span className='text-lg'>{data.bathrooms} </span></Typography>
-                    <Typography>For - <span className='text-lg'>{data.sitetype} </span></Typography>
+                    <Typography>Mode - <span className='text-lg'>{data.sitetype} </span></Typography>
                     <Typography>Price -  <span className='text-lg line-through text-red-700'>{data.regularPrice} INR</span> <span className='text-xl text-green-500'>{data.discountedPrice} INR</span></Typography>
 
-                    <div className='w-full flex justify-center items-center mt-8'>
-                        <Button onClick={contactHandeller} style={{'backgroundColor' : 'Blue' , 'color' : 'White', 'alignItems': 'center' }} varinat="contained">Contact For More Details</Button>
+                    <div className='w-full mt-4 mb-8'>
+                        <Button onClick={contactHandeller} style={{'backgroundColor' : 'Green' , 'color' : 'White' }} varinat="contained">Contact For More Details</Button>
                     </div>
                
                </div>

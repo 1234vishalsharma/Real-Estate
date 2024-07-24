@@ -154,7 +154,7 @@ export default function Profile() {
 
   if (userData) return (
     <div>
-      <h2 className='text-center text-2xl font-semibold mt-4 text-slate-600'>Profile</h2>
+      <h2 className='text-center text-2xl font-semibold p-4 text-slate-600'>Profile</h2>
       <div className="flex gap-4 mt-1 p-8 items-center justify-evenly max-md:flex-col">
 
             <form className='flex gap-4 flex-col w-96 mt-10'>
