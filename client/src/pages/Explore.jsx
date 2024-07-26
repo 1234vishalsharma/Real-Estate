@@ -1,6 +1,8 @@
 import { Button, MenuItem, Select, Slider, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+
+
 function Card(data){
   const router = useNavigate();
   const LoadSite = () =>{
@@ -9,7 +11,7 @@ function Card(data){
     router(`/SiteView/${pid}` , {state : data?.data});
   }
   return (
-    <div onClick={LoadSite} className='flex justify-center items-center flex-col gap-2 m-4 card'>
+    <div onClick={LoadSite} className='flex justify-center overflow-x-auto items-center flex-col gap-2 m-4 card'>
             <div className='relative h-80 w-80 bg-gray-600 rounded-2xl border-black cursor-pointer overflow-hidden group'>
               <img className='z-0  absolute h-full w-full object-cover' src={data?.data.images[0]} alt="Loading..."/>
               <div className='-bottom-28 pl-2  absolute group-hover:-translate-y-28  group-hover:visible duration-200 ease-in-out'>
@@ -24,7 +26,25 @@ export default function Explore() {
   const [sites, setSites] = useState([]);
   const [value , setValue] = useState(5);
   const [type , setType] = useState();
+  const [area , setArea] = useState();
 
+  const applyFilter = () => {
+    fetch("http://localhost:8000/api/user/get_property" , {
+      method: "GET",
+      headers : {
+        'content-type':"application/json"
+      },
+      body : JSON.stringify({
+        Price : value,
+        Type : type,
+        Area : area
+      })
+    }).then((res)=>{
+      return res.json();
+    }).then((data)=>{
+      console.log(data);
+    })
+  }
   const handelChange = (event) => {
     const value = event.target.value;
     if(value == 10){
@@ -54,8 +74,7 @@ export default function Explore() {
     getData();  
   } , [])
   return (
-    <div className='flex h-screen w-screen bg-slate-600'>
-      
+    <div className='flex h-screen w-full bg-slate-600'>
 
       <div className='bg-red-400 flex flex-col justify-center h-full w-2/4 pt-16'>
         <Typography variant='h6' style={{textAlign: 'center'}}>Filter options</Typography>
@@ -71,7 +90,7 @@ export default function Explore() {
 
         <div className='flex gap-3 justify-start items-center ml-12 mt-8'>
           <span className="text-xl">Area</span>
-          <input type="number" className='rounded-sm outline-none w-32 p-2 '/> (in meter)
+          <input type="number" onChange={(e)=>setArea(e.target.value)} className='rounded-sm outline-none w-32 p-2 '/> (in sqft)
           <div className='flex gap-3 ml-12 justify-center items-center'>
             <span className='text-xl'>Type </span>
             <Select style={{width:'150px', height:"46px", outline:"0" ,  backgroundColor: 'white', Color: 'black'}}
@@ -84,7 +103,7 @@ export default function Explore() {
           </div>
           </div>
         <div className='mt-12 flex w-full pl-32 pr-32 justify-center'>
-          <Button fullWidth={true} variant="contained">Apply Filter</Button>
+          <Button onClick={applyFilter} fullWidth={true} variant="contained">Apply Filter</Button>
         </div>
 
       </div>  

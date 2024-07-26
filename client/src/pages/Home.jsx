@@ -1,6 +1,7 @@
 import { Typography , Button } from '@mui/material';
 import React , {useState , useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import Footer from '../components/Footer';
 
 function Card(data){
   const router = useNavigate();
@@ -52,15 +53,14 @@ function Home() {
         <button onClick={GotoExplore} className="text-xl max-sm:w-32 w-96 p-2 border-2 border-black rounded-lg hover:bg-slate-400 hover:text-white transition-all ease-in-out duration-300" >Explore sites / Filter sites</button>
       </div>
 
-    {/* cards section */}
-    <span className="text-2xl font-semibold ml-8 mt-4 text-center">All Sites</span>
-    <div className='flex overflow-y-auto items-center m-4 gap-4'>
-        {sites.length > 0 ? sites.map((data, index) => (
-          <Card key={index} data={data} />
-        )) : <p>Loading Sites...</p>}
+      {/* cards section */}
+      <span className="text-2xl font-semibold ml-8 mt-4 text-center">All Sites</span>
+      <div className='flex overflow-y-auto items-center m-4 gap-4'>
+          {sites.length > 0 ? sites.map((data, index) => (
+            <Card key={index} data={data} />
+          )) : <p>Loading Sites...</p>}
       </div>
-   
-
+      <Footer/>
     </div>
   )
 

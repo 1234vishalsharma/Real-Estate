@@ -8,13 +8,15 @@ const deleteUser = require('../controllers/deleteUser');
 const UpdateUser = require('../controllers/UpdateUser');
 const PostProperty = require('../controllers/PostProperty');
 const VerifyUser = require('../middleware/VerifyUser');
-const getProperty = require('../controllers/getProperty');
+const {getProperty} = require('../controllers/getProperty');
+const {filterSite} = require('../controllers/getProperty');
 
 router.post('/Login' , Login);
 router.post('/Signup' , Signup);
 router.post('/google' , OAuth);
 router.post('/get_user' , getUser);
 router.get('/getProperty' , getProperty);
+router.get('/filterSite' , filterSite);
 router.delete('/rm_user' , deleteUser);
 router.put('/UpdateUser'   , VerifyUser, UpdateUser);
 router.post('/post_property' , VerifyUser , PostProperty);
