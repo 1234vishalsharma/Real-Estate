@@ -46,7 +46,7 @@ function Home() {
  
 
   return ( 
-    <div className='flex flex-col gap-8 pt-8'>
+    <div className='flex flex-col gap-8 pt-16'>
       <div className='flex flex-col gap-4 mt-16 ml-16'>
         <h1 className="tex[0t-slate-700 font-bold text-3xl lg:text-5xl">Find your dream <span class="text-slate-500">Place</span> <br/>  with RealEstate</h1>
         <p className='text-md text-cyan-800 font-semibold'>RealEstate is a online Property Commerce Site for Purchasers and Tenants.</p>
@@ -55,7 +55,7 @@ function Home() {
 
       {/* cards section */}
       <span className="text-2xl font-semibold ml-8 mt-4 text-center">All Sites</span>
-      <div className='flex overflow-y-auto items-center m-4 gap-4'>
+      <div className='flex flex-wrap ml-10 justify-evenly gap-4'>
           {sites.length > 0 ? sites.map((data, index) => (
             <Card key={index} data={data} />
           )) : <p>Loading Sites...</p>}
