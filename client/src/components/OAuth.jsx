@@ -58,7 +58,7 @@ export default function OAuth() {
   return (
     <div>
         <ToastContainer/>
-      <Button onClick={handelGoogleAuth} type='button' variant='contained' fullWidth={true} style={{"backgroundColor":"red"}}>Continue with Google</Button>
+      <Button onClick={handelGoogleAuth} type='button' variant='contained' fullWidth={true} style={{"backgroundColor":"green"}}>Continue with Google</Button>
     </div>
   )
 }
