@@ -30,7 +30,7 @@ export default function Explore() {
   const [location , setLocation] = useState();
 
   const applyFilter = () => {
-    fetch("http://localhost:8000/api/user/get_property" , {
+    fetch("https://real-estste-ps7k.onrender.com/api/user/get_property" , {
       method: "GET",
       headers : {
         'content-type':"application/json"
@@ -80,7 +80,7 @@ export default function Explore() {
   useEffect(()=>{
     const getData = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/user/getProperty", {
+        const res = await fetch("https://real-estste-ps7k.onrender.com/api/user/getProperty", {
           method: "GET"
         });
         const result = await res.json();

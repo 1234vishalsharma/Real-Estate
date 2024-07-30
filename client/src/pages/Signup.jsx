@@ -19,7 +19,7 @@ export default function Signup() {
         type: "error"
       })
     }
-    fetch('http://localhost:8000/api/user/Signup' , {
+    fetch('https://real-estste-ps7k.onrender.com/api/user/Signup' , {
       method: "POST",
       headers: {
         'content-type' : 'application/json', 

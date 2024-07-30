@@ -96,7 +96,7 @@ export default function PostProperty() {
         }
         const toastId = toast.loading("Posting Site...");
         console.log(token);
-        fetch('http://localhost:8000/api/user/post_property',{
+        fetch('https://real-estste-ps7k.onrender.com/api/user/post_property',{
             method : "POST",
             headers : {
                 "content-type" : "application/json",

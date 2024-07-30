@@ -18,7 +18,7 @@ export default function Header() {
     } , [userpic]);
 
         useEffect(()=>{
-            fetch('http://localhost:8000/api/user/get_user' , {
+            fetch('https://real-estste-ps7k.onrender.com/api/user/get_user' , {
                 method: "POST",
                 headers:{
                     'content-type' : 'application/json',

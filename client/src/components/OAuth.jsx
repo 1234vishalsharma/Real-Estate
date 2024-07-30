@@ -18,7 +18,7 @@ export default function OAuth() {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(auth , provider);
             console.log(result);
-            const res = await fetch("http://localhost:8000/api/user/google" ,{
+            const res = await fetch("https://real-estste-ps7k.onrender.com/api/user/google" ,{
                 method: "POST",
                 headers: {
                     'content-type': 'application/json',

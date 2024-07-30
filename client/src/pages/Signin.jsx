@@ -36,7 +36,7 @@ export default function Signin() {
       return;
     }
     console.log(username , password);
-    fetch("http://localhost:8000/api/user/Login" , {
+    fetch("https://real-estste-ps7k.onrender.com/api/user/Login" , {
       method: "POST",
       headers: {
         'content-type' : 'application/json', 

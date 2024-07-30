@@ -32,7 +32,7 @@ function Home() {
   useEffect(()=>{
     const getData = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/user/getProperty", {
+        const res = await fetch("https://real-estste-ps7k.onrender.com/api/user/getProperty", {
           method: "GET"
         });
         const result = await res.json();

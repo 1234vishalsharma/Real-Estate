@@ -64,7 +64,7 @@ export default function Profile() {
     
     const profile_pic = profile ? profile : userData.profile_pic;
     console.log("Current user token is: " , currentUser);
-    fetch("http://localhost:8000/api/user/UpdateUser" , {
+    fetch("https://real-estste-ps7k.onrender.com/api/user/UpdateUser" , {
       method: "PUT",
       headers: {
         'content-type' : 'application/json',
@@ -105,7 +105,7 @@ export default function Profile() {
   
   
   const removeUser = () => {
-    fetch("http://localhost:8000/api/user/rm_user" , {
+    fetch("https://real-estste-ps7k.onrender.com/api/user/rm_user" , {
       method : "DELETE",
       headers : {
         'content-type' : 'application/json'
@@ -131,7 +131,7 @@ export default function Profile() {
   }
 
    useEffect(()=>{
-    fetch('http://localhost:8000/api/user/get_user' , {
+    fetch('https://real-estste-ps7k.onrender.com/api/user/get_user' , {
         method: "POST",
         headers:{
             'content-type' : 'application/json',
