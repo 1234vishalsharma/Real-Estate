@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react'
-import { TextField , Button  ,Typography } from '@mui/material';
+import { TextField , Button  ,Typography, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { getDownloadURL, getStorage, listAll, ref, uploadBytesResumable } from 'firebase/storage';
 import {  useParams  } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -8,7 +8,6 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function PostProperty() {
     const {PID} = useParams();
     const [Sitename , setSiteName] = useState();
-    const [SiteAddress , setSiteAddress] = useState();
     const [Sitedesc , setSiteDesc] = useState();
     const [rent , setRent] = useState(true); 
     const [sell , setSell] = useState(false); 
@@ -20,20 +19,29 @@ export default function PostProperty() {
     const [discountedPrice , setDiscountedPrice] = useState(); 
     const [ImageUrls , setImageUrls] = useState([]);
     const [siteImages , setSiteImages] = useState([]);
-    const [PostDisable , setPostDisable] = useState(false);
     const token = useSelector(state => state.user.currentUser);
-
+    const [loc , setLoc] = useState();
     const handelSell = () => {
         setSell(true);
-        setRent(false);
-        
+        setRent(false);   
     }
     const handelRent = () => {
         setRent(true);
         setSell(false);
     }
+    const handelChangeLoc = (event) => {
+        const value = event.target.value;
+        if(value == 1){
+          setLoc("New Anand Vihar");
+        }else if(value == 2){
+          setLoc("Shankar Vihar");
+        }else if(value == 3){
+          setLoc("Rail Vihar");
+        }else{
+          setLoc("Akash Vihar");
+        }
+    }
     const UploadSiteImages = async() => {
-        setPostDisable(true);
         const toastID = toast.loading("Uploading Files...");
         console.log("Image details are: ", siteImages , PID);
         let i = 0;
@@ -71,7 +79,6 @@ export default function PostProperty() {
             setTimeout(() => {
                 toast.success("Something went wrong");
                 toast.dismiss(toastID);
-                setPostDisable(true);
             } , 2000);
             
             console.log("Error occured while getting images url" , error);
@@ -79,14 +86,13 @@ export default function PostProperty() {
         setTimeout(() => {
             toast.success("Files Uploaded Successfully");
             toast.dismiss(toastID);
-            setPostDisable(true);
         } , 2000);
         
     }
 
     const postData = () => {
         
-        if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls || !SiteAddress || !area){
+        if(!Sitename || !Sitedesc || !bedrooms || !bathrooms || !regularPrice || !discountedPrice || !ImageUrls || !loc || !area){
             alert("Cannot post data please fill all fields carefully");
             return;
         }
@@ -103,7 +109,7 @@ export default function PostProperty() {
                 "token" : token
             },
             body : JSON.stringify({
-                PID , Sitename, SiteAddress , Sitedesc , rent , sell , parking , bedrooms, area, bathrooms , regularPrice , discountedPrice , ImageUrls
+                PID , Sitename, loc , Sitedesc , rent , sell , parking , bedrooms, area, bathrooms , regularPrice , discountedPrice , ImageUrls
             })
         }).then((res)=>{
             return res.json();
@@ -130,7 +136,8 @@ export default function PostProperty() {
         // console.log("bathrooms is: ", bathrooms);
         // console.log("regularPrice is: ", regularPrice);
         // console.log("discountedPrice is: ", discountedPrice);
-    }, [rent,sell,parking,bedrooms,bathrooms,regularPrice,discountedPrice])
+        // console.log(loc);
+    }, [rent,sell,parking,bedrooms,bathrooms,regularPrice,discountedPrice,loc])
 
   return (
     <div className='justify-center pt-28 gap-32 sm:flex'>
@@ -139,7 +146,22 @@ export default function PostProperty() {
             <h2 className='text-center text-2xl text-slate-700 font-bold'>Post Property</h2>    
             <div className='flex flex-col items-center gap-4'>
                 <TextField onChange={(e)=>setSiteName(e.target.value)} style={{"width": "20rem"}} label="Site Name"></TextField>
-                <TextField onChange={(e)=>setSiteAddress(e.target.value)} style={{"width": "20rem"}} label="Address / Location"></TextField>
+                
+                <div className='flex w-full flex-col gap-3'>
+                    <FormControl fullWidth variant={"filled"}>
+                        {/* <span className='text-md font-semibold'>Type</span> */}
+                        <InputLabel>Location</InputLabel>
+                        <Select 
+                            onChange={handelChangeLoc}
+                            value={loc}>
+                            <MenuItem value={1}>New Anand Vihar</MenuItem>
+                            <MenuItem value={2}>Shankar Vihar</MenuItem>
+                            <MenuItem value={3}>Rail Vihar</MenuItem>
+                            <MenuItem value={4}>Aakash Vihar</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+
                 <TextField onChange={(e)=>setSiteDesc(e.target.value)} style={{"width": "20rem"}} label="Site Description"></TextField>
             </div>
             <div className='flex flex-col gap-2'>
@@ -148,8 +170,11 @@ export default function PostProperty() {
                     <input onChange= {(e) => setSiteImages(e.target.files)} type="file" multiple className="w-64"/>
                     <Button onClick={UploadSiteImages} variant= {"contained"} style={{"backgroundColor":"red"}}> Upload</Button>
                 </div>
+                <span className='text-red-600 text-center'>Note: Please Upload images before Posting site</span>
             </div>
+            
             <Button  onClick={postData} variant={"contained"} style={{"width":"20rem", "backgroundColor":"Green", 'cursor':'blocked'}}>Post Site</Button>
+    
         </div>  
 
         {/* <div className='mt-16'>
@@ -228,7 +253,7 @@ export default function PostProperty() {
             </div>
 
             <div className='flex gap-2 mt-5 flex-col'>
-                <Typography style ={{'font': 'bold', 'fontSize':'20px', 'fontWeight':'600'}}>Type</Typography>
+                <Typography style ={{'font': 'bold', 'fontSize':'20px', 'fontWeight':'600'}}>Mode</Typography>
                 <div className='flex gap-2 ml-6'>
                     <input defaultChecked onClick={handelRent} className='h-6 w-6' type="radio" name='type' />
                     <Typography>Rent</Typography>
@@ -256,7 +281,7 @@ export default function PostProperty() {
                 </div>
                 <div className='flex gap-2 ml-6'>
                     <input defaultValue={0} onChange={(e)=>setArea(e.target.value)} className='h-8 w-20 border border-black outline-none p-2' Type='number' name="type" />
-                    <Typography>Area (Sqft)</Typography>
+                    <Typography>Area (in Gaj)</Typography>
                 </div>
             </div>
 

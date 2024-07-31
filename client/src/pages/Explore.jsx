@@ -111,7 +111,7 @@ export default function Explore() {
         <div className='flex flex-col gap-3 ml-2 mt-4'>
           <span className="text-md font-semibold">Area Filter</span>
           <div className='flex gap-3 ml-2'>
-            <input placeholder='Area' type="number" onChange={(e)=>setArea(e.target.value)} className='rounded-sm outline-none w-32 p-2 '/> (in sqft)
+            <input placeholder='Area' type="number" onChange={(e)=>setArea(e.target.value)} className='rounded-sm outline-none w-32 p-2 '/> (in Gaj)
           </div>
 
           <FormControl fullWidth variant={"filled"}>
@@ -135,7 +135,7 @@ export default function Explore() {
             <InputLabel>Location</InputLabel>
               <Select 
                 onChange={handelChangeLocation}
-                value={type}>
+                value={location}>
                 <MenuItem value={1}>New Anand Vihar</MenuItem>
                 <MenuItem value={2}>Shankar Vihar</MenuItem>
                 <MenuItem value={3}>Rail Vihar</MenuItem>

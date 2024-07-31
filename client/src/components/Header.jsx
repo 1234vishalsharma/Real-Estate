@@ -39,11 +39,11 @@ export default function Header() {
     return (
     <header className='fixed z-10 w-full h-16 p-8 bg-slate-300 flex justify-between items-center'>
         <Link to="/" className='font-bold text-sm sm:text-xl flex flex-wrap'>
-            <span className='text-slate-700'>
-                Real
+            <span className='text-slate-500 font-bold'>
+                Sharma 
             </span>
-            <span className='text-slate-800'>
-                Estate
+            <span className='text-slate-800 font-bold'>
+                Properties
             </span>
         </Link>
         <form className='p-3 rounded-lg bg-slate-100 flex items-center'>

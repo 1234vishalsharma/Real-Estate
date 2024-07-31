@@ -8,11 +8,9 @@ const uploadSiteImages = (siteImages) => {
 
 const PostProperty = async(req,res) => {
     try{
-        //  PID , Sitename , Sitedesc , rent , sell , parking , bedrooms, bathrooms , regularPrice , discountedPrice , ImageUrls
-        console.log("request is: " , req.body);
         const {PID} = req.body;  
         const {Sitename} = req.body;  
-        const {SiteAddress} = req.body;  
+        const {loc} = req.body;  
         const {Sitedesc} = req.body;
         const {sell} = req.body;
         const {parking} = req.body;
@@ -34,7 +32,7 @@ const PostProperty = async(req,res) => {
                 pid: PID,
                 name:Sitename,
                 desc:Sitedesc,
-                address: SiteAddress,
+                address: loc,
                 regularPrice,
                 discountedPrice,
                 bathrooms: bathrooms,
