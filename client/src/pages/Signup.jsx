@@ -2,8 +2,7 @@ import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
-import {toast , ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast , {Toaster} from 'react-hot-toast'
 import OAuth from '../components/OAuth';
 
 export default function Signup() {
@@ -14,11 +13,10 @@ export default function Signup() {
   const [username , setUsername] = useState();
   const handelSignup = () => { 
     if(!name || !number || !username || !password){
-      toast("Fields are necessary" , {
-        theme: "dark",
-        type: "error"
-      })
+      toast.error("All fields are necessary");
+      return;
     }
+    const toastID = toast.loading("Creating Account...");
     fetch('https://real-estste-ps7k.onrender.com/api/user/Signup' , {
       method: "POST",
       headers: {
@@ -35,15 +33,21 @@ export default function Signup() {
     }).then((data) => {
       console.log(data);
       if(data.success){
-        router('/Signin')
+        toast.success("Account Created");
+        toast.dismiss(toastID);
+        setTimeout(()=>{
+          router('/Signin')
+        },2000);
       }
     }).catch((e) => {
+      toast.error("Account not created");
+      toast.dismiss(toastID);
       console.log("Error occured " , e);
     })
   }
   return (
     <div className='pt-16'>
-      <ToastContainer/>
+      <Toaster/>
       <h2 className="text-2xl text-center font-semibold my-7">
         Sign up
       </h2>

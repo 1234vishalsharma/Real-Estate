@@ -3,35 +3,37 @@ import profile from '/portfile.jpg';
 import location from "../../public/location.png"
 const Footer = () => {
   return (
-    <div className='bg-slate-900 h-96 w-full flex justify-evenly items-center text-white  mt-64 p-0'>
+    <div className='bg-slate-900 h-96 w-full flex justify-evenly items-center text-white  mt-64 p-0 max-sm:hidden'>
 
-        <img className='rounded-full h-64 w-64' src={profile} alt="Loading..."/>
+        <img className='rounded-full h-64 w-64 max-md:h-32 max-md:w-32' src={profile} alt="Loading..."/>
 
-        <div className='flex flex-col gap-5'>
-            <span className='text-lg text-blue-700 font-semibold'>Get In Touch</span>
-            <div className='flex gap-2 flex-col'>
+        <div className='flex justify-center items-center max-md:flex-col gap-8'>
+            <div className='flex flex-col gap-5'>
+                <span className='text-lg text-blue-700 font-semibold'>Get In Touch</span>
+                <div className='flex gap-2 flex-col'>
+                    <span>Email : <a className='hover:text-blue-400' href='mailto:sharmacons12@gmail.com'>sharmacons12@gmail.com</a></span>
+                    <span>Phone No. : <a className='hover:text-blue-400' href='tel:+91 9818544256'>+91 98185 44256</a></span>
+                    <span>Whatsapp : <a className='hover:text-blue-400' href='https://wa.me/919818544256'>+91 98185 44256</a></span>
+                </div>
+            </div>
+            
+            <div className='flex flex-col gap-5 max-lg:hidden'>
+                <span className='text-lg text-blue-700 font-semibold'>Raise Complaint</span>
+                <div className='flex gap-2 flex-col'>
                 <span>Email : <a className='hover:text-blue-400' href='mailto:sharmacons12@gmail.com'>sharmacons12@gmail.com</a></span>
-                <span>Phone No. : <a className='hover:text-blue-400' href='tel:+91 9818544256'>+91 98185 44256</a></span>
-                <span>Whatsapp : <a className='hover:text-blue-400' href='https://wa.me/919818544256'>+91 98185 44256</a></span>
+                    <span>Phone No. : <a className='hover:text-blue-400' href='tel:+91 9818544256'>+91 98185 44256</a></span>
+                    <span>Whatsapp : <a className='hover:text-blue-400' href='https://wa.me/919818544256'>+91 98185 44256</a></span>
+                </div>
             </div>
-        </div>
-        
-        <div className='flex flex-col gap-5'>
-            <span className='text-lg text-blue-700 font-semibold'>Raise Complaint</span>
-            <div className='flex gap-2 flex-col'>
-            <span>Email : <a className='hover:text-blue-400' href='mailto:sharmacons12@gmail.com'>sharmacons12@gmail.com</a></span>
-                <span>Phone No. : <a className='hover:text-blue-400' href='tel:+91 9818544256'>+91 98185 44256</a></span>
-                <span>Whatsapp : <a className='hover:text-blue-400' href='https://wa.me/919818544256'>+91 98185 44256</a></span>
-            </div>
-        </div>
 
-        <div className='flex flex-col items-center gap-5'>
-            <span className='text-lg font-semibold text-blue-700'>Location</span>
-            <div className='flex gap-2 items-center flex-col'>
-               {/* <img className='h-8 w-8' src={location} alt="...." />  */}
-               <img src="https://www.google.com/maps/vt/data=XfQ3hx8kDtQJLntnOsEyHBiK8AtgfVFNXfU2z5vxuylzNwE75u7lgXWcxBLuddoeIQODoMXd5S2vttaw_fXEVtcprPEaHKdUX2MGXcj087k_V3tbWRT8G0xuwqDLSLakd9yrdepdK5OUkEhU2budJB6Y-2kXcdlNP8PgozqyZ9RnBkJ4PRzhtEmyF-xbe8ohENzTqMprlM3GDUNxm52H_RWhs4eDXcPmuzQ"
-                className='h-64 w-70'   
-                alt="Loading..." />
+            <div className='flex flex-col items-center gap-5  max-lg:hidden'>
+                <span className='text-lg font-semibold text-blue-700'>Location</span>
+                <div className='flex gap-2 items-center flex-col'>
+                {/* <img className='h-8 w-8' src={location} alt="...." />  */}
+                <img src="https://www.google.com/maps/vt/data=XfQ3hx8kDtQJLntnOsEyHBiK8AtgfVFNXfU2z5vxuylzNwE75u7lgXWcxBLuddoeIQODoMXd5S2vttaw_fXEVtcprPEaHKdUX2MGXcj087k_V3tbWRT8G0xuwqDLSLakd9yrdepdK5OUkEhU2budJB6Y-2kXcdlNP8PgozqyZ9RnBkJ4PRzhtEmyF-xbe8ohENzTqMprlM3GDUNxm52H_RWhs4eDXcPmuzQ"
+                    className='h-64 w-70'   
+                    alt="Loading..." />
+                </div>
             </div>
         </div>
 

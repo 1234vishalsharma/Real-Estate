@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Link , useNavigate} from 'react-router-dom';
 import {Button} from '@mui/material';
-import {ToastContainer , toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast, { Toaster } from 'react-hot-toast';
 import {useDispatch, useSelector} from 'react-redux';
 import { signInSuccess , signInFailure , signInStart } from '../store/reducers/userSlice';
 import OAuth from '../components/OAuth';
@@ -14,27 +13,14 @@ export default function Signin() {
   const [password , setPassword] = useState("");  
   const dispatch = useDispatch();  
  
-  const error = useSelector((state) => state.user.error);
- 
-  useEffect(()=>{
-    notify(error);
-  },[error])
-
-  const notify = (text) => {
-   
-      toast(text , {
-      theme: "dark",
-      type: "error"
-    });
-  
-  }
   const handelLogin = (e) => {
     e.preventDefault();
     dispatch(signInStart());
     if(!username || !password){
-      notify("empty fields are not allowed");
+      toast.error("Empty Fields can't be processed.");
       return;
     }
+    const toastId = toast.loading("Loading...");
     console.log(username , password);
     fetch("https://real-estste-ps7k.onrender.com/api/user/Login" , {
       method: "POST",
@@ -49,14 +35,23 @@ export default function Signin() {
       return resp.json();
     }).then((data) => {
       console.log(data);
-      if(data.success){
+      if(data.success){      
         dispatch(signInSuccess(data.token_id))
-        router('/')
         localStorage.setItem('token' , data.token_id);
+
+        toast.success("Login Success");
+        toast.dismiss(toastId);
+
+        setTimeout(() => {
+          router('/');
+        }, 2000 );
       }else{
-        dispatch(signInFailure("Faild to login"));
+        toast.error("Login Failed");
+        toast.dismiss(toastId);
       }
-        }).catch((e) => {
+    }).catch((e) => {
+          toast.error("Login Failed due to issue occured");
+          toast.dismiss(toastId);
           dispatch(signInFailure(e.message));
           console.log("Error occured");
     })
@@ -64,7 +59,7 @@ export default function Signin() {
 
   return (
     <div className='pt-16'>
-      <ToastContainer/>
+      <Toaster/>
       <h2 className="text-2xl text-center font-semibold my-7">
         Login
       </h2>

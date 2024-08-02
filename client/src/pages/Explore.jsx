@@ -11,11 +11,11 @@ function Card(data){
     router(`/SiteView/${pid}` , {state : data?.data});
   }
   return (
-    <div onClick={LoadSite} className='flex justify-center  items-center flex-col gap-2 m-4 card'>
-            <div className='relative h-80 w-80 bg-gray-600 rounded-2xl border-black cursor-pointer overflow-hidden group'>
+    <div onClick={LoadSite} className='flex justify-center items-center flex-wrap gap-2 m-4 card'>
+            <div className='relative h-80 w-80 max-md-w-full bg-gray-600 rounded-2xl border-black cursor-pointer overflow-hidden group'>
               <img className='z-0  absolute h-full w-full object-cover' src={data?.data.images[0]} alt="Loading..."/>
               <div className='-bottom-28 pl-2  absolute group-hover:-translate-y-28  group-hover:visible duration-200 ease-in-out'>
-                  <h2 className='p-2 font-bold text-2xl text-[#3d5a80]'>{data?.data.name}</h2>
+                  <h2 className='p-2 font-bold text-xl text-[#3d5a80]'>{data?.data.name}</h2>
                   <p className='text-center font-bold p-2 text-[#3d5a80]'>{data?.data.desc}</p>
                   </div>
                 </div>
@@ -92,15 +92,15 @@ export default function Explore() {
     getData();  
   } , [])
   return (
-    <div className='flex items-center justify-center h-screen w-full '>
+    <div className='flex items-center justify-center h-screen w-full max-md:flex-col max-md:h-full'>
 
-      <div className='w-1/4 h-screen max-md:hidden '>
+      <div className='w-[24rem] h-full'>
 
-        <div className='flex flex-col w-full flex-wrap overflow-hidden justify-center border shadow-2xl bg-slate-100 rounded-xl mt-28 ml-4 p-4'>
+        <div className='flex flex-col w-96 flex-wrap justify-center border shadow-2xl bg-slate-100 rounded-xl mt-28 ml-4 mr-4 p-4 '>
         <span className='text-xl font-bold text-center'>Filter Options</span>
-        <div className='flex gap-1 flex-col ml-2 mt-12'>
+        <div className='flex gap-1 flex-col ml-2 mt-12 '>
           <span className='font-semibold'>Price Filter</span>
-          <div className='flex gap-2 items-center ml-3'>
+          <div className='flex gap-2 items-center justify-center ml-3'>
             <span className='text-md mr-2'>5L</span>
             <Slider onChange={(e) => setValue(e.target.value)} style={{width:"100px"}} valueLabelDisplay="auto" min={5} max={200}/> 
             <span className='text-md ml-2'> 2Cr</span>
@@ -113,23 +113,23 @@ export default function Explore() {
           <div className='flex gap-3 ml-2'>
             <input placeholder='Area' type="number" onChange={(e)=>setArea(e.target.value)} className='rounded-sm outline-none w-32 p-2 '/> (in Gaj)
           </div>
+        </div>
 
-          <FormControl fullWidth variant={"filled"}>
+
+        <div className='flex flex-col gap-3 ml-2 mt-4 max-md:flex-row'>
+        <FormControl fullWidth variant={"filled"}>
             {/* <span className='text-md font-semibold'>Type</span> */}
             <InputLabel>Type</InputLabel>
               <Select 
                 onChange={handelChange}
-                value={location}>
+                value={type}>
                 <MenuItem value={1}>Plots/Land</MenuItem>
                 <MenuItem value={2}>House</MenuItem>
                 <MenuItem value={3}>Rentals</MenuItem>
                 <MenuItem value={4}>All*</MenuItem>
               </Select>
           </FormControl>
-        </div>
-
-
-        <div className='flex flex-col gap-3 ml-2 mt-4'>
+          
         <FormControl fullWidth variant={"filled"}>
             {/* <span className='text-md font-semibold'>Type</span> */}
             <InputLabel>Location</InputLabel>
@@ -154,9 +154,9 @@ export default function Explore() {
 
     </div>  
     
-      <div className=' h-full w-3/4 overflow-x-auto pt-16'>
+      <div className=' h-full w-3/4 overflow-auto pt-16'>
         <Typography variant='h6' style={{fontStyle:'bold' , textAlign: 'center' , marginTop: '12px' }}>Your Sites Appear Here </Typography>
-        <div className='flex flex-wrap justify-center items-center m-4 gap-4 '>
+        <div className='flex flex-wrap justify-center items-center m-4 gap-2'>
           {sites.length > 0 ? sites.map((data, index) => (
             <Card key={index} data={data} />
           )) : <p>Loading Sites...</p>}

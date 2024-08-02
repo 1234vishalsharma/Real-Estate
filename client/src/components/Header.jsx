@@ -46,7 +46,7 @@ export default function Header() {
                 Properties
             </span>
         </Link>
-        <form className='p-3 rounded-lg bg-slate-100 flex items-center'>
+        <form className='p-3 rounded-lg bg-slate-100 flex items-center max-md:hidden'>
             <input className="bg-transparent focus:outline-none" type="text" placeholder='Search...' />
             <FaSearch/>
         </form>
